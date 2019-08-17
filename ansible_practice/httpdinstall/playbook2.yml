@@ -1,0 +1,21 @@
+---
+ - hosts: group1
+   become: yes
+   vars:
+     - pkg: "{{pkg_name}}"
+
+   tasks:
+     - name: packg installation
+       yum: name={{item}} state=present
+       with_items:
+         - "{{pkg}}"
+       register: pkg_installation
+
+     - name: service restart
+       service: name={{item}} state=started
+       with_items:
+         - "{{pkg}}"
+       when: pkg_installation|success
+
+    
+       

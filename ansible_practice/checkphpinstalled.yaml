@@ -1,0 +1,23 @@
+---
+ - hosts: group1
+   become: true
+   tasks:
+     - name: check if php is installed or not
+       command: php -v
+       register: php_installed
+       ignore_errors: true
+
+     - name: print the register output
+       debug: var=php_installed
+       
+     - name: if php installed print success message
+       debug: msg='php installed successfully'
+       when: php_installed|success
+
+     - name: php not  installed 
+       debug: msg='php not installed'
+       when: php_installed|failed
+
+
+       
+       

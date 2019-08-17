@@ -1,0 +1,32 @@
+---
+ - hosts: group1
+   become: yes
+   vars:
+     http_port: 8092
+     admin_user: admin
+     admin_password: admin
+   
+   tasks:
+     - name: install java
+       yum: name=java-1.7.0-openjdk state=present
+   
+     - name: Download Tomcat
+       get_url: url=http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.61/bin/apache-tomcat-7.0.61.tar.gz dest=/opt
+ 
+     - name:  Extract archive
+       command: tar xvf /opt/apache-tomcat-7.0.61.tar.gz chdir=/opt
+
+     - name: change permission for startup.sh
+       file: path=/opt/apache-tomcat-7.0.61/bin/startup.sh mode=u+x,g+x,o+x
+    
+     - name: change permission for shutdown.sh
+       file: path=/opt/apache-tomcat-7.0.61/bin/shutdown.sh mode=u+x,g+x,o+x
+
+     - name: symlink for startup.sh
+       file: src=/opt/apache-tomcat-7.0.61/bin/startup.sh dest=/usr/local/bin/tomcatup state=link
+
+     - name: symlink for startup.sh
+       file: src=/opt/apache-tomcat-7.0.61/bin/shutdown.sh dest=/usr/local/bin/tomcatdown state=link
+     
+     - name: start tomcat
+       command: sh tomcatup chdir=/usr/local/bin 

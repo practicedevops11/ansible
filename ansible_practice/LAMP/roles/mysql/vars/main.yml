@@ -1,0 +1,4 @@
+---
+# vars file for mysql
+ user_name: demo
+ user_password: demo

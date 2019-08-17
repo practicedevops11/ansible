@@ -1,0 +1,9 @@
+---
+ - hosts: group1
+   become: yes
+   vars_files:
+    -  userfile.yml
+
+   tasks:
+     - name: user creation
+       user: name={{user_name}} password={{user_passwd|password_hash('sha512')}} shell=/bin/bash

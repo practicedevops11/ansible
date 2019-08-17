@@ -1,0 +1,22 @@
+---
+# tasks file for apache
+ - name: install Apache
+   yum: name=httpd state=present
+
+ - name: install php
+   yum: name=php state=present
+
+ - name: install Hello World PHP script
+   copy: src=index.php dest=/var/www/html/index.php 
+   notify:
+     -  httpd_restart
+
+ - name: "Updating httpd conf"
+   lineinfile: dest=/etc/httpd/conf/httpd.conf state=present regexp="^Listen" line="Listen 8092"
+   notify:
+     -  httpd_restart
+
+
+ 
+
+

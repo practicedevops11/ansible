@@ -1,0 +1,27 @@
+---
+ - hosts: group1
+   become: yes
+   tasks:
+     - name: install http
+       yum: name=httpd state=present
+       register: httpd_install
+
+     - name: package validation
+       command: ls -al /sbin/httpd
+       register: pkg_validation
+       when: httpd_install|success
+
+     - name: update the configuration file
+       lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="^Listen" line="Listen 8082"
+       when: httpd_install|success and httpd_install|success
+       notify: restart_httpd
+       
+     - name: copy index file
+       copy: src=index.html dest=/var/www/html
+       when: httpd_install|success and httpd_install|success
+       notify: restart_httpd
+
+   handlers:
+     - name: "restart_httpd"  
+       service: name=httpd state=started
+

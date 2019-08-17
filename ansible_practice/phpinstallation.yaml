@@ -1,0 +1,11 @@
+---
+ - hosts: group1
+   become: true
+   tasks:
+     - name: install php
+       yum: name=php state=present
+       register: php_installation
+     
+     - name: check php installation
+       command: php -v
+       when: php_installation|success

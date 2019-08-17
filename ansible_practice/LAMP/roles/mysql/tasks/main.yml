@@ -1,0 +1,27 @@
+---
+# tasks file for mysql
+ - name: Install MariaDB server package
+   yum: name={{item}} state=present
+   with_items:
+     - mariadb-server
+     - MySQL-python
+
+ - name: Start Mysql Service
+   service: name={{item}} state=started enabled=true
+   with_items:
+     - mariadb
+
+ - name:  Create a new database
+   mysql_db: name={{user_name}} state=present
+
+ - name: Create a database user
+   mysql_user: name={{user_password}} password={{user_password}} priv=*.*:ALL host=localhost state=present
+
+ - name: Copy sample data
+   copy: src=dump.sql dest=/tmp/dump.sql
+
+ - name: Restore database
+   mysql_db: name=demo state=import target=/tmp/dump.sql
+
+  
+

@@ -1,0 +1,16 @@
+---
+ - hosts: group2
+   become: true
+   roles:
+     - apache
+     - mysql
+
+
+ - hosts: group1
+   become: true
+   vars:
+     user_name: demo3
+     user_password: demo3
+   roles:
+     - mysql
+

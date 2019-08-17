@@ -1,0 +1,20 @@
+---
+ - hosts: group1
+   become: true
+   vars:
+     pkg: "{{pkg_name}}"
+
+   tasks:
+     - name: packg installation
+       yum: name={{pkg}} state=present
+       register: pkg_installation
+
+     - name: pkg validation
+       command: ls -al /sbin/httpd
+       register: pkg_validation
+
+     - name: service restart
+       service: name={{pkg}} state=started
+       when: pkg_installation|success and pkg_validation|success
+
+    
